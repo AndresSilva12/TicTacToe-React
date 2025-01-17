@@ -1,9 +1,10 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './App.css'
 import { turns, maxMovimientos } from './constants'
 import { checkWinner } from './logic/logic'
 import confetti from 'canvas-confetti'
 import Square from './Components/Mesa'
+import { saveGameToStorage } from './logic/storage'
 
 function App() {
   
@@ -46,8 +47,6 @@ function App() {
       setTablero(newTablero)
       const newTurn = turn == turns.X ? turns.O : turns.X
       setTurn(newTurn)
-      window.localStorage.setItem('board', JSON.stringify(newTablero))
-      window.localStorage.setItem('turn', JSON.stringify(newTurn))
       
 
       const newWinner = checkWinner(newTablero)
@@ -96,6 +95,12 @@ function App() {
     }
   }
 
+  useEffect(() => {
+    saveGameToStorage({
+      tablero: tablero,
+      turn: turn
+    })
+  }, [turn, tablero])
   
 
   return (
